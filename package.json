@@ -5,5 +5,14 @@
   "license": "MIT",
   "dependencies": {
     "express": "^4.17.1"
+  },
+  
+  "scripts": {
+    "start": "nodemon src/server.js"
+  },
+
+  "devDependencies": {
+    "nodemon": "^2.0.2",
+    "sucrase": "^3.12.1"
   }
 }
