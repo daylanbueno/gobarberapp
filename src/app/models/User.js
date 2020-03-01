@@ -23,6 +23,11 @@ class User extends Model {
         return this;
     }
 
+    // fazendo relacionamento ==> pertence a
+    static associate(models) {
+        this.belongsTo(models.File, { foreignKey: 'avatar_id' });
+    }
+
     checkPassword(password) {
         return bcrptjs.compare(password, this.password_hash);
     }
