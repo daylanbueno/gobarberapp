@@ -23,7 +23,7 @@ class Appointment extends Model {
         });
         this.belongsTo(models.User, {
             foreignKey: 'provider_id',
-            as: 'provider_id',
+            as: 'provider',
         });
     }
 }
