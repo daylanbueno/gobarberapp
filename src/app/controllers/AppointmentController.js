@@ -2,6 +2,7 @@ import * as yup from 'yup';
 import {  startOfHour, parseISO, isBefore } from 'date-fns'
 import Appointment from '../models/Appointment';
 import User from '../models/User';
+import File  from '../models/File'
 
 const validateSchema = yup.object().shape({
     provider_id: yup.number().required(),
@@ -9,6 +10,30 @@ const validateSchema = yup.object().shape({
 });
 
 class AppointmentController {
+
+    async index(req, res) {
+        const { page } = req.query
+        const appointments  = await Appointment.findAll({
+            where: {  user_id: req.userId, canceled_at: null },
+            order:['date'],
+            attributes: ['id', 'date'],
+            limit: 20,
+            offset: (page - 1) * 20,
+            include: [
+                {
+                    model: User, as: 'provider', attributes: ['id', 'nome'],
+                    include: [
+                        {
+                            model: File, as: 'avatar', attributes: ['id', 'path', 'url']
+                        }
+                    ]
+                }
+              
+            ]
+        })
+        return res.json(appointments)
+    }
+
     async store(req, res) {
         if (!(await validateSchema.isValid(req.body))) {
             return res.status(400).json({ error: ' campos obrigatório' });
