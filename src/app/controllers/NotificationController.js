@@ -16,5 +16,14 @@ class NotificationController {
         .limit(20) // limitar em 20 registro
         return res.json(notifications)
     }
+
+    async update(req, res) {
+        const notifications = await Notification.findOneAndUpdate(
+            req.params.id,
+            {read: true},
+            {new : true}
+        );
+        return res.json(notifications)
+    }
 }
 export default new NotificationController() 
