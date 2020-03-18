@@ -1,8 +1,10 @@
 import * as yup from 'yup';
-import {  startOfHour, parseISO, isBefore } from 'date-fns'
+import { format,  startOfHour, parseISO, isBefore } from 'date-fns'
+import pt from 'date-fns/locale/pt';
 import Appointment from '../models/Appointment';
 import User from '../models/User';
 import File  from '../models/File'
+import Notification from '../../schemas/Notification'
 
 const validateSchema = yup.object().shape({
     provider_id: yup.number().required(),
@@ -57,7 +59,7 @@ class AppointmentController {
         }
 
         const checkHorarioIndisponivel  = await Appointment.findOne({
-            where: {
+            where: { 
                 provider_id,
                 canceled_at: null,
                 date: hourStart
@@ -73,6 +75,17 @@ class AppointmentController {
             provider_id,
             date,
         });
+
+        const user  = await  User.findByPk(req.userId)
+        const formatedDate   = format(
+            hourStart,
+            "'dia' dd  'de' MMMM, 'às' H:mm'h' ",
+            {locale: pt}
+        )
+        await Notification.create({
+            content: `Novo agendamento  ${user.nome} ${formatedDate} `,
+            user: provider_id,
+        })
 
         return res.json(appointment);
     }
