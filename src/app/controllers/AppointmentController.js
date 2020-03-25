@@ -1,10 +1,12 @@
 import * as yup from 'yup';
 import { format, startOfHour, parseISO, isBefore, subHours } from 'date-fns';
 import pt from 'date-fns/locale/pt';
+
 import Appointment from '../models/Appointment';
 import User from '../models/User';
 import File from '../models/File';
 import Notification from '../../schemas/Notification';
+import Mail from '../../lib/Mail';
 
 const validateSchema = yup.object().shape({
     provider_id: yup.number().required(),
@@ -13,7 +15,7 @@ const validateSchema = yup.object().shape({
 
 class AppointmentController {
     async index(req, res) {
-        const { page } = req.query;
+        const { page = 1 } = req.query;
         const appointments = await Appointment.findAll({
             where: { user_id: req.userId, canceled_at: null },
             order: ['date'],
@@ -95,7 +97,15 @@ class AppointmentController {
     }
 
     async delete(req, res) {
-        const appointment = await Appointment.findByPk(req.params.id);
+        const appointment = await Appointment.findByPk(req.params.id, {
+            include: [
+                {
+                    model: User,
+                    as: 'provider',
+                    attributes: ['nome', 'email'],
+                },
+            ],
+        });
         if (!appointment || appointment === null) {
             return res.status(204).json();
         }
@@ -114,7 +124,12 @@ class AppointmentController {
             });
         }
         appointment.canceled_at = new Date();
-        appointment.save();
+        await appointment.save();
+        await Mail.sendMail({
+            to: `${appointment.provider.nome} <${appointment.provider.email}> `,
+            subject: 'Agendamento cancelado',
+            text: 'Você tem um novo cancelamento',
+        });
 
         return res.json(appointment);
     }
