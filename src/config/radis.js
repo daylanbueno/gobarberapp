@@ -1,4 +1,4 @@
 export default {
-    host: '127.0.0.1',
-    port: 6379,
+    host: process.env.RADIS_HOST,
+    port: process.env.RADIS_PORT,
 };
