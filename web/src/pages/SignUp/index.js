@@ -1,5 +1,19 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 
-export default function SigUp() {
-    return <h1>SigUp</h1>;
+import logo from '../../assets/logo.svg';
+
+export default function SignUp() {
+    return (
+        <>
+            <img src={logo} alt="Gobarber" />
+            <form>
+                <input placeholder="Nome completo" />
+                <input type="email" placeholder="Seu e-mail" />
+                <input type="password" placeholder="Sua senha secreta" />
+                <button type="submit">Acessar</button>
+                <Link to="/">Já tenho login</Link>
+            </form>
+        </>
+    );
 }
