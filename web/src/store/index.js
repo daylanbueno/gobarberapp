@@ -1,19 +1,17 @@
-import createSagaMiddleware from 'redux-saga';
-import createStore from './createStore';
+/* eslint-disable no-underscore-dangle */
+import { createStore, applyMiddleware } from 'redux';
+import multi from 'redux-multi';
+import promise from 'redux-promise';
+import thunk from 'redux-thunk';
 
-import rootReducer from './modules/rootReducer';
-import rootSaga from './modules/rootSaga';
+import reducers from './modules/rootReducer';
 
-const sagaMonitor =
-    process.env.NODE_ENV === 'development'
-        ? console.tron.createSagaMonitor()
-        : null;
-const sagaMiddlweare = createSagaMiddleware({ sagaMonitor });
-
-const middlweares = [sagaMiddlweare];
-
-const store = createStore(rootReducer, middlweares);
-
-sagaMiddlweare.run(rootSaga);
+const devTools =
+    window.__REDUX_DEVTOOLS_EXTENSION__ &&
+    window.__REDUX_DEVTOOLS_EXTENSION__();
+const store = applyMiddleware(thunk, multi, promise)(createStore)(
+    reducers,
+    devTools
+);
 
 export default store;
