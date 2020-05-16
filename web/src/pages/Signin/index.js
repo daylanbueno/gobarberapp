@@ -2,7 +2,6 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { Form, Input } from '@rocketseat/unform';
 import * as yup from 'yup';
-
 import logo from '../../assets/logo.svg';
 
 const validationSchema = yup.object().shape({
@@ -14,7 +13,7 @@ const validationSchema = yup.object().shape({
 });
 
 export default function Signin() {
-    function handleSubmit(data) {
+    async function handleSubmit(data) {
         console.log('data', data);
     }
 

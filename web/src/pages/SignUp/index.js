@@ -1,8 +1,10 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { toast } from 'react-toastify';
+
+import { Link, useHistory } from 'react-router-dom';
 import { Form, Input } from '@rocketseat/unform';
 import * as yup from 'yup';
-
+import api from '../../services/api';
 import logo from '../../assets/logo.svg';
 
 const schema = yup.object().shape({
@@ -10,13 +12,23 @@ const schema = yup.object().shape({
     email: yup
         .string()
         .email('E-mail inválido!')
-        .required('O E-mail é obrigatóri'),
+        .required('O E-mail é obrigatório'),
     password: yup.string().required('A senha é obrigatória'),
 });
 
 export default function SignUp() {
-    function handleSubmit(data) {
-        console.log('data', data);
+    const history = useHistory();
+    async function handleSubmit(data) {
+        try {
+            const response = await api.post('/users', data);
+            if (response.data) {
+                toast.success('Operação realizada com sucesso!');
+                history.push('/');
+            }
+        } catch (e) {
+            const { data: errorBackEnd } = e.response;
+            toast.error(errorBackEnd.error);
+        }
     }
 
     return (
@@ -30,7 +42,7 @@ export default function SignUp() {
                     type="password"
                     placeholder="Sua senha secreta"
                 />
-                <button type="submit">Acessar</button>
+                <button type="submit">Salvar</button>
                 <Link to="/">Já tenho login</Link>
             </Form>
         </>
