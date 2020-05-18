@@ -1,6 +1,7 @@
 /* eslint-disable react/jsx-props-no-spreading */
 import React from 'react';
 import { Route, Redirect } from 'react-router-dom';
+import { useSelector } from 'react-redux';
 import PropTypes from 'prop-types';
 
 import AuthLayout from '../pages/_layouts/auth';
@@ -11,7 +12,10 @@ export default function RouteWrapper({
     isPrivate,
     ...rest
 }) {
-    const signed = false;
+    const auth = useSelector((state) => state.auth);
+    const { isAutenticado } = auth;
+    const signed = isAutenticado;
+
     if (!signed && isPrivate) {
         return <Redirect to="/" />;
     }

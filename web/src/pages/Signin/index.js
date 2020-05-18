@@ -1,8 +1,13 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
+import { toast } from 'react-toastify';
 import { Form, Input } from '@rocketseat/unform';
 import * as yup from 'yup';
 import logo from '../../assets/logo.svg';
+import { addTokenLogin } from '../../store/modules/auth/actions';
+import { addUsuarioLogado } from '../../store/modules/auth/user/actions';
+import api from '../../services/api';
 
 const validationSchema = yup.object().shape({
     email: yup
@@ -13,8 +18,23 @@ const validationSchema = yup.object().shape({
 });
 
 export default function Signin() {
+    const dispatch = useDispatch();
     async function handleSubmit(data) {
-        console.log('data', data);
+        try {
+            const response = await api.post('/sessions', data);
+            const { token = '', newUser } = response.data;
+            if (!newUser.provider) {
+                toast.error('Usuário não é um prestador de serviço');
+                return;
+            }
+            if (token) {
+                dispatch(addTokenLogin({ token }));
+                dispatch(addUsuarioLogado(newUser));
+            }
+        } catch (e) {
+            const { data: errorData } = e.response;
+            toast.error(errorData);
+        }
     }
 
     return (
