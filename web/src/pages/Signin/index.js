@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { toast } from 'react-toastify';
@@ -18,11 +18,14 @@ const validationSchema = yup.object().shape({
 });
 
 export default function Signin() {
+    const [loading, setLoading] = useState(false);
     const dispatch = useDispatch();
     async function handleSubmit(data) {
         try {
+            setLoading(true);
             const response = await api.post('/sessions', data);
             const { token = '', newUser } = response.data;
+            setLoading(false);
             if (!newUser.provider) {
                 toast.error('Usuário não é um prestador de serviço');
                 return;
@@ -32,6 +35,7 @@ export default function Signin() {
                 dispatch(addUsuarioLogado(newUser));
             }
         } catch (e) {
+            setLoading(false);
             const { data: errorData } = e.response;
             toast.error(errorData);
         }
@@ -47,7 +51,9 @@ export default function Signin() {
                     type="password"
                     placeholder="Sua senha secreta"
                 />
-                <button type="submit">Acessar</button>
+                <button type="submit">
+                    {loading ? 'Carregando...' : 'Acessar'}
+                </button>
                 <Link to="register">Cria sua conta gratuita</Link>
             </Form>
         </>

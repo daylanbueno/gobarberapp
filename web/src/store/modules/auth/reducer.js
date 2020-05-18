@@ -1,6 +1,7 @@
+const tokeArmazenado = localStorage.getItem('token');
 const INITIAL_STATE = {
-    token: '',
-    isAutenticado: false,
+    token: tokeArmazenado || null,
+    isAutenticado: !!tokeArmazenado,
 };
 
 export default function auth(state = INITIAL_STATE, action) {

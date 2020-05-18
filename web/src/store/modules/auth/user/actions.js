@@ -1,4 +1,7 @@
+import { addUserLocalStorege } from '../../../../util/authUtil';
+
 export function addUsuarioLogado(user) {
+    addUserLocalStorege(user);
     return {
         type: '@ADD_USUARIO_LOGADO',
         payload: user,

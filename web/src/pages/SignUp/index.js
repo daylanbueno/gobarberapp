@@ -18,9 +18,15 @@ const schema = yup.object().shape({
 
 export default function SignUp() {
     const history = useHistory();
-    async function handleSubmit(data) {
+    async function handleSubmit({ nome, email, password }) {
         try {
-            const response = await api.post('/users', data);
+            const user = {
+                nome,
+                email,
+                password,
+                provider: true,
+            };
+            const response = await api.post('/users', user);
             if (response.data) {
                 toast.success('Operação realizada com sucesso!');
                 history.push('/');

@@ -1,8 +1,9 @@
+const userStorege = JSON.parse(localStorage.getItem('usuarioLogado'));
 const INITIAL_STATE = {
-    nome: null,
-    email: null,
-    avatar: null,
-    provider: null,
+    nome: userStorege && userStorege.nome,
+    email: userStorege && userStorege.email,
+    avatar: userStorege && userStorege.avatar,
+    provider: userStorege && userStorege.provider,
 };
 
 export default function user(state = INITIAL_STATE, action) {
