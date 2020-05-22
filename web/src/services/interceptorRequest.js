@@ -1,6 +1,4 @@
 /* eslint-disable no-param-reassign */
-import { toast } from 'react-toastify';
-
 import api from './api';
 
 const interceptor = api.interceptors.request.use(async (config) => {
@@ -11,9 +9,6 @@ const interceptor = api.interceptors.request.use(async (config) => {
         }
         return config;
     } catch (e) {
-        toast.warn(
-            'Ouve um problema com o token, se o problema continuar favor procure o administrador do sistema.'
-        );
         return config;
     }
 });
