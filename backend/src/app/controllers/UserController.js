@@ -1,6 +1,6 @@
 import * as Yup from 'yup';
 import User from '../models/User';
-import File from '../models/File';
+//import File from '../models/File';
 
 class UserController {
     async store(req, res) {
@@ -67,20 +67,11 @@ class UserController {
             return res.status(401).json('Senha invalida');
         }
 
-        // const { id, nome, provider } = await user.update(req.body);
-        await user.update(req.body);
+        const { id, nome, avatar = null, provider } = await user.update(
+            req.body
+        );
 
-        const { id, nome, avatar } = await user.findByPk(req.userId, {
-            include: [
-                {
-                    model: File,
-                    as: 'avatar',
-                    attributes: ['id', 'path', 'url'],
-                },
-            ],
-        });
-
-        return res.json({ id, nome, email, avatar });
+        return res.json({ id, nome, email, avatar, provider });
     }
 }
 
