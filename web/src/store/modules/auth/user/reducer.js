@@ -20,7 +20,10 @@ export default function user(state = INITIAL_STATE, action) {
         case '@REMOVER_USUARIO_LOGADO':
             return {
                 ...state,
-                INITIAL_STATE,
+                nome: null,
+                email: null,
+                provider: null,
+                avatar: null,
             };
 
         default:

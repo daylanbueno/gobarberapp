@@ -5,3 +5,7 @@ export function addTokenLocalStorege(token) {
 export function addUserLocalStorege(user) {
     localStorage.setItem('usuarioLogado', JSON.stringify(user));
 }
+
+export function limparLocalStorege() {
+    localStorage.clear();
+}

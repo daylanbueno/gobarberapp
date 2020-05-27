@@ -1,4 +1,7 @@
-import { addUserLocalStorege } from '../../../../util/authUtil';
+import {
+    addUserLocalStorege,
+    limparLocalStorege,
+} from '../../../../util/authUtil';
 
 export function addUsuarioLogado(user) {
     addUserLocalStorege(user);
@@ -9,8 +12,9 @@ export function addUsuarioLogado(user) {
 }
 
 export function removerUsuarioLogado(user) {
+    limparLocalStorege();
     return {
-        type: '@REMOVE_TOKEN_LOGIN',
+        type: '@REMOVER_USUARIO_LOGADO',
         payload: user,
     };
 }
