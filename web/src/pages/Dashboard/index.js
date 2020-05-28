@@ -1,18 +1,35 @@
-import React from 'react';
+import React, { useState, useMemo } from 'react';
+
+import { format, addDays, subDays } from 'date-fns';
+import pt from 'date-fns/locale/pt';
 
 import { MdChevronLeft, MdChevronRight } from 'react-icons/md';
 
 import { Container, Time } from './styles';
 
 function Dashboard() {
+    const [dataAtual, setDataAtual] = useState(new Date());
+
+    const dataFormatada = useMemo(
+        () => format(dataAtual, "dd 'de' MMMM", { locale: pt }),
+        [dataAtual]
+    );
+
+    const handleProximoDia = () => {
+        setDataAtual(addDays(dataAtual, 1));
+    };
+    const handleDiaAnterior = () => {
+        setDataAtual(subDays(dataAtual, 1));
+    };
+
     return (
         <Container>
             <header>
-                <button type="button">
+                <button onClick={() => handleProximoDia()} type="button">
                     <MdChevronLeft size={36} color="#fff" />
                 </button>
-                <strong>26 de maio </strong>
-                <button type="button">
+                <strong>{dataFormatada}</strong>
+                <button onClick={() => handleDiaAnterior()} type="button">
                     <MdChevronRight size={36} color="#fff" />
                 </button>
             </header>
